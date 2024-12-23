@@ -1,0 +1,38 @@
+@startuml
+!include style.puml
+nwdiag {
+  network internet {
+    address = "0.0.0.0/0";
+    telegram_client [address = "Клиенты"];
+  }
+
+  network dmz {
+    address = "10.0.1.0/24";
+    telegram_bot [address = "10.0.1.10"];
+    vpn_service [address = "10.0.1.20"];
+  }
+
+  network internal {
+    address = "10.0.2.0/24";
+    app_server [address = "10.0.2.10"];
+    monitoring [address = "10.0.2.20"];
+    database [address = "10.0.2.30"];
+  }
+
+  network vpn_servers {
+    address = "10.0.3.0/24";
+    vpn_server1 [address = "10.0.3.10"];
+    vpn_server2 [address = "10.0.3.20"];
+    vpn_server3 [address = "10.0.3.30"];
+  }
+
+  telegram_client -- telegram_bot;
+  telegram_bot -- vpn_service;
+  vpn_service -- app_server;
+  app_server -- database;
+  app_server -- monitoring;
+  app_server -- vpn_server1;
+  app_server -- vpn_server2;
+  app_server -- vpn_server3;
+}
+@enduml

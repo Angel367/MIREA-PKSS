@@ -1,0 +1,35 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+LAYOUT_WITH_LEGEND()
+title VPN Service System - Container View
+
+Person(user, "Пользователь", "Человек, желающий получить VPN доступ")
+
+System_Boundary(vpnSystem, "VPN Service") {
+    Container(telegramBot, "Telegram Bot", "Python", "Обрабатывает взаимодействие с пользователями")
+    Container(vpnService, "VPN Service", "Python", "Управляет VPN серверами и ключами")
+    Container(adminPanel, "Admin Panel", "React", "Интерфейс администратора")
+    ContainerDb(database, "Database", "PostgreSQL", "Хранит данные о пользователях и VPN ключах")
+    Container(monitoring, "Monitoring Service", "Prometheus + Grafana", "Мониторинг системы")
+}
+
+System_Ext(telegramApi, "Telegram API", "Внешний API Telegram")
+System_Ext(paymentSystem, "Payment System", "Система платежей")
+Boundary(k8s, "Kubernetes Cluster") {
+    Container(vpnServer1, "VPN Server 1", "WireGuard", "VPN сервер")
+    Container(vpnServer2, "VPN Server 2", "WireGuard", "VPN сервер")
+}
+
+Rel(user, telegramApi, "Использует")
+Rel(telegramApi, telegramBot, "API вызовы")
+Rel(telegramBot, vpnService, "REST API")
+Rel(vpnService, database, "SQL")
+Rel(vpnService, vpnServer1, "Управляет")
+Rel(vpnService, vpnServer2, "Управляет")
+Rel(vpnService, paymentSystem, "API вызовы")
+Rel(monitoring, vpnServer1, "Собирает метрики")
+Rel(monitoring, vpnServer2, "Собирает метрики")
+Rel(adminPanel, vpnService, "REST API")
+
+@enduml

@@ -1,0 +1,71 @@
+@startuml
+!include style.puml
+cloud "Интернет" as Internet
+
+node "Клиентское устройство" as ClientDevice {
+    [Telegram Client]
+}
+
+node "Основной сервер" as MainServer {
+    [VPNService]
+    [TelegramBot]
+    database "PostgreSQL" as DB
+
+    note bottom of MainServer
+        ОС: Ubuntu Server 22.04 LTS
+        CPU: 4 cores
+        RAM: 16GB
+        SSD: 100GB
+        Kubernetes Master Node
+    end note
+}
+
+node "Мониторинг сервер" as MonitoringServer {
+    [Prometheus]
+    [Grafana]
+
+    note bottom of MonitoringServer
+        ОС: Ubuntu Server 22.04
+        CPU: 2 cores
+        RAM: 4GB
+        SSD: 50GB
+    end note
+}
+
+cloud "Kubernetes Cluster" as K8S {
+    node "VPN Server 1" as VPNServer1 {
+        [OpenVPN/WireGuard]
+
+        note bottom of VPNServer1
+            ОС: Ubuntu Server 22.04
+            CPU: 1 core
+            RAM: 1GB
+            SSD: 10GB
+        end note
+    }
+
+    node "VPN Server 2" as VPNServer2 {
+        [OpenVPN/WireGuard]
+    }
+
+    node "VPN Server N" as VPNServerN {
+        [OpenVPN/WireGuard]
+    }
+}
+
+' Связи
+ClientDevice --> Internet : HTTPS
+Internet --> MainServer : HTTPS/API
+MainServer --> K8S : Kubernetes API
+MonitoringServer --> MainServer : Мониторинг
+MonitoringServer --> K8S : Сбор метрик
+
+VPNServer2 -[hidden]-> VPNServerN
+VPNServer1 -[hidden]-> VPNServer2
+
+note right of K8S
+    Автоматическое масштабирование
+    VPN серверов через Kubernetes
+end note
+
+@enduml

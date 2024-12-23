@@ -1,0 +1,70 @@
+@startuml
+
+' Общие настройки
+skinparam backgroundColor white
+skinparam handwritten false
+skinparam shadowing false
+skinparam defaultFontName "Arial"
+skinparam defaultFontSize 12
+skinparam roundCorner 8
+skinparam ArrowColor #666666
+
+' Компоненты
+skinparam component {
+    BackgroundColor #f0f5ff
+    BorderColor #2c5aa0
+    FontColor #2c5aa0
+    BorderThickness 1
+}
+
+' Пакеты
+skinparam package {
+    BackgroundColor white
+    BorderColor #666666
+    FontColor #333333
+    BorderThickness 1
+}
+
+' Узлы
+skinparam node {
+    BackgroundColor #f5f5f5
+    BorderColor #999999
+    FontColor #333333
+}
+
+' Базы данных
+skinparam database {
+    BackgroundColor #f5fbef
+    BorderColor #3b7908
+    FontColor #3b7908
+}
+
+' Заметки
+skinparam note {
+    BackgroundColor #fff8dc
+    BorderColor #cab98f
+    FontColor #666666
+}
+
+' Состояния
+skinparam state {
+    BackgroundColor #f0f5ff
+    BorderColor #2c5aa0
+    FontColor #2c5aa0
+}
+
+' Облака
+skinparam cloud {
+    BackgroundColor #f8f8ff
+    BorderColor #666666
+    FontColor #666666
+}
+
+' Стрелки
+skinparam arrow {
+    Color #666666
+    FontColor #666666
+    Thickness 1
+}
+
+@enduml

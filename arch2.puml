@@ -1,0 +1,39 @@
+@startuml
+!include style.puml
+package "Клиентский уровень" {
+    [TelegramBot] as TB
+    interface "Telegram API" as TAPI
+}
+package "Сервисный уровень" {
+    [VPNService] as VS
+    [UserService] as AS
+    interface "VPN API" as VAPI
+    interface "Telegram API" as AAPI
+}
+package "Уровень данных" {
+    database "БД пользователей" as UserDB
+    database "БД VPN ключей" as KeyDB
+    database "БД серверов" as ServerDB
+}
+package "Инфраструктура" {
+    [VPNServer1] as VPS1
+    [VPNServer2] as VPS2
+}
+' Связи между компонентами
+TB ..> TAPI
+TB --> VS : HTTP запросы
+TB --> AS : Авторизация
+
+VS ..> VAPI
+VS --> UserDB : Чтение/запись
+VS --> KeyDB : Управление ключами
+VS --> ServerDB : Получение серверов
+VS --> VPS1 : Управление
+VS --> VPS2 : Управление
+
+AS ..> AAPI
+AS --> UserDB : Проверка данных
+
+' Группировка серверов
+VPS1 -[hidden]right- VPS2
+@enduml

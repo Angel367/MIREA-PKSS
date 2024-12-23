@@ -1,0 +1,71 @@
+@startuml
+title VPN Service - Code Level
+
+class VPNService {
+    + servers: list
+    + get_free_server(): list
+    + generate_key(server_id, user_id)
+    + revoke_key(key_id)
+}
+
+class VPNServer {
+    + server_id: string
+    + server_location: City
+    - api_key: string
+    + get_key(is_active: bool, user_id: int)
+    + send_hello_msg(user_id: int)
+    + handle_request(user_msg: string, user_id: int)
+    + send_key(user_id: int, key: string)
+    + generate_key(user_id: int, duration: DateTime)
+    + get_server_load()
+    + revoke_key(key_id)
+}
+
+class VPNKey {
+    + user: User
+    - vpn_key: string
+    + vpn_server: VPNServer
+    + expiration_date: DateTime
+    + traffic_last_period_bytes: int
+    + traffic_limit: bytes
+    + revoke_key()
+    + update_expiration_date(new_date: DateTime)
+    + is_traffic_limit_overloaded(): bool
+}
+
+class User {
+    + telegram_id: int
+    + phone_number: string
+    + username: string
+    + full_name: string
+    + update_expiration_date(new_date: DateTime)
+}
+
+class City {
+    + city_name: string
+    + country: Country
+}
+
+class Country {
+    + country_name: string
+}
+
+class TelegramBot {
+    + bot_token: string
+    + vpn_service: VPNService
+    + start_bot()
+    + send_hello_msg(user_id: int)
+    + handle_request(user_msg: string, user_id: int)
+    + send_key(user_id: int, key: string)
+}
+
+' Связи
+VPNServer "1" -- "1" VPNService
+VPNKey "1" -- "1" VPNServer
+VPNKey "1" -- "1" User
+City "1" -- "*" VPNServer : < server_location
+City "*" -- "1" Country
+TelegramBot "*" -- "1" User : Взаимодействует
+TelegramBot "*" -- "1" VPNService : Взаимодействует
+
+@enduml

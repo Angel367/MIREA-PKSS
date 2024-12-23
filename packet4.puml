@@ -1,0 +1,41 @@
+@startuml
+!include style.puml
+package "Server layer" {
+    package "Controller" {
+        [VPNService Controller]
+        [VPNServer Controller]
+        [VPNKey Controller]
+        [TelegramBot Controller]
+        [City Controller]
+        [Country Controller]
+        [User Controller]
+    }
+    package "Model" {
+        [VPNService]
+        [VPNServer]
+        [VPNKey]
+        [TelegramBot]
+        [City]
+        [Country]
+        [User]
+        [City] --> [Country]
+        [VPNServer] --> [City]
+        [VPNServer] --> [VPNKey]
+        [VPNService] --> [VPNServer]
+        [VPNService] --> [User]
+        [VPNKey] --> [User]
+        [TelegramBot] --> [User]
+    }
+    package "View" {
+        [VPNService View]
+        [VPNServer View]
+        [VPNKey View]
+        [TelegramBot View]
+        [City View]
+        [Country View]
+    }
+}
+Controller ..> Model
+Controller ..> View
+note "MVC архитектура" as N1
+@enduml

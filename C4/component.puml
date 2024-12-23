@@ -1,0 +1,30 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_WITH_LEGEND()
+title VPN Service - Component View
+
+Container(telegramBot, "Telegram Bot", "Python", "Интерфейс пользователя")
+System_Ext(telegramAPI, "Telegram API")
+ContainerDb(db, "Database", "PostgreSQL", "Хранение данных")
+
+Container_Boundary(vpnService, "VPN Service") {
+    Component(apiGateway, "API Gateway", "Python, REST API", "Обработка внешних запросов")
+    Component(userService, "User Service", "Python", "Управление пользователями")
+    Component(vpnManager, "VPN Manager", "Python", "Управление VPN серверами")
+    Component(keyService, "Key Service", "Python", "Управление VPN ключами")
+    Component(billingService, "Billing Service", "Python", "Управление платежами")
+}
+
+Rel(telegramBot, telegramAPI, "REST API")
+Rel(telegramBot, apiGateway, "REST API")
+Rel(apiGateway, userService, "REST API")
+Rel(apiGateway, vpnManager, "REST API")
+Rel(apiGateway, keyService, "REST API")
+Rel(apiGateway, billingService, "REST API")
+Rel(userService, db, "SQL")
+Rel(keyService, db, "SQL")
+Rel(billingService, db, "SQL")
+
+
+@enduml

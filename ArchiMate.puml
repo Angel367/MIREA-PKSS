@@ -1,0 +1,36 @@
+@startuml
+!include style.puml
+
+title Архитектура VPN сервиса
+
+' Бизнес-слой
+archimate #Business "Пользователь" as User <<business-actor>>
+archimate #Business "Подключение к VPN" as VPNConnection <<business-service>>
+archimate #Business "Управление подпиской" as SubManagement <<business-service>>
+
+' Слой приложений
+archimate #Application "Telegram Bot" as TelegramBot <<application-component>>
+archimate #Application "VPN Service" as VPNService <<application-component>>
+archimate #Application "User Service" as UserService <<application-component>>
+archimate #Application "Monitoring Service" as MonitoringService <<application-component>>
+
+' Технологический слой
+archimate #Technology "Kubernetes Cluster" as K8S <<technology-system>>
+archimate #Technology "VPN Servers" as VPNServers <<technology-device>>
+archimate #Technology "PostgreSQL" as Database <<technology-system>>
+archimate #Technology "Prometheus" as Prometheus <<technology-system>>
+
+' Связи
+User --> VPNConnection
+User --> SubManagement
+VPNConnection --> TelegramBot
+SubManagement --> TelegramBot
+TelegramBot --> VPNService
+VPNService --> UserService
+VPNService --> K8S
+UserService --> Database
+K8S --> VPNServers
+MonitoringService --> Prometheus
+VPNServers --> MonitoringService
+
+@enduml
